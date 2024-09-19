@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useNavigate, Routes, Route, Link, useLocation } from 'react-router-dom';
 
 // Declare the dataLayer array
-const dataLayer = [];
+var dataLayer = [];
 
 // Push events to dataLayer with additional details
 const pushToDataLayer = (event, previous_url) => {
@@ -12,7 +12,7 @@ const pushToDataLayer = (event, previous_url) => {
     url: window.location.href, // current URL
     previous_url: previous_url || document.referrer // previous URL (manual or fallback to referrer)
   });
-  console.log('Data Layer:', dataLayer);
+  console.log('dataLayer:', dataLayer);
 };
 
 const HomePage = () => {
