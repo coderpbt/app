@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, Routes, Route, Link, useLocation } from 'react-router-dom';
 
-// Declare the dataLayer array
-var dataLayer = [];
+// Declare the dataLayer globally
+window.dataLayer = window.dataLayer || [];
 
 // Push events to dataLayer with additional details
 const pushToDataLayer = (event, previous_url) => {
-  dataLayer.push({
+  window.dataLayer.push({
     event,
     timestamp: new Date().toISOString(),
     url: window.location.href, // current URL
     previous_url: previous_url || document.referrer // previous URL (manual or fallback to referrer)
   });
-  console.log('dataLayer:', dataLayer);
+  console.log('dataLayer:', window.dataLayer);
 };
 
 const HomePage = () => {
