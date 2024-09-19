@@ -6,50 +6,49 @@ window.dataLayer = window.dataLayer || [];
 
 // Push events to dataLayer with additional details
 const pushToDataLayer = (event, previous_url) => {
-  window.dataLayer.push({
-    event,
-    timestamp: new Date().toISOString(),
-    url: window.location.href, // current URL
-    previous_url: previous_url || document.referrer // previous URL (manual or fallback to referrer)
-  });
-  console.log('dataLayer:', window.dataLayer);
+  if (!window.dataLayer.some(item => item.event === event && item.url === window.location.href)) {
+    window.dataLayer.push({
+      event,
+      timestamp: new Date().toISOString(),
+      url: window.location.href, // current URL
+      previous_url: previous_url || document.referrer // previous URL (manual or fallback to referrer)
+    });
+    console.log('dataLayer:', window.dataLayer);
+  }
 };
 
 const HomePage = () => {
   useEffect(() => {
-    pushToDataLayer('screen_load');
+    pushToDataLayer('screen_load', document.referrer);
   }, []);
 
   return (
     <div className='container'>
       <h1>Home Page</h1>
-      {/* <p>Data Layer: {JSON.stringify(dataLayer)}</p> */}
     </div>
   );
 };
 
 const Page1 = () => {
   useEffect(() => {
-    pushToDataLayer('screen_load');
+    pushToDataLayer('screen_load', document.referrer);
   }, []);
 
   return (
     <div className='container'>
       <h1>Page 1</h1>
-      {/* <p>Data Layer: {JSON.stringify(dataLayer)}</p> */}
     </div>
   );
 };
 
 const Page2 = () => {
   useEffect(() => {
-    pushToDataLayer('screen_load');
+    pushToDataLayer('screen_load', document.referrer);
   }, []);
 
   return (
     <div className='container'>
       <h1>Page 2</h1>
-      {/* <p>Data Layer: {JSON.stringify(dataLayer)}</p> */}
     </div>
   );
 };
