@@ -66,29 +66,16 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Trigger push to dataLayer for screen load when navigating (browser back/forward or link clicks)
+    // Trigger screen_load event when the route changes, including Back/Forward navigation
     pushToDataLayer('screen_load', previousUrlRef.current);
 
-    // Update the previous URL after navigation
+    // Log both screen load and Back/Forward button actions
+    console.log('Navigated via Back/Forward button');
+    console.log('dataLayer:', window.dataLayer);
+
+    // Update previous URL with the current one
     previousUrlRef.current = window.location.href;
   }, [location]);
-
-  // Add an event listener for detecting browser back/forward button navigation
-  useEffect(() => {
-    const handlePopState = () => {
-      // Trigger push to dataLayer when the browser back or forward button is pressed
-      pushToDataLayer('screen_load', previousUrlRef.current);
-
-      // Update the previous URL with the new one after back/forward navigation
-      previousUrlRef.current = window.location.href;
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
 
   return (
     <div className='container'>
