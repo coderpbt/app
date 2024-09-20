@@ -18,10 +18,6 @@ const pushToDataLayer = (event, previous_url) => {
 };
 
 const HomePage = () => {
-  useEffect(() => {
-    pushToDataLayer('screen_load', document.referrer);
-  }, []);
-
   return (
     <div className='container'>
       <h1>Home Page</h1>
@@ -30,10 +26,6 @@ const HomePage = () => {
 };
 
 const Page1 = () => {
-  useEffect(() => {
-    pushToDataLayer('screen_load', document.referrer);
-  }, []);
-
   return (
     <div className='container'>
       <h1>Page 1</h1>
@@ -42,10 +34,6 @@ const Page1 = () => {
 };
 
 const Page2 = () => {
-  useEffect(() => {
-    pushToDataLayer('screen_load', document.referrer);
-  }, []);
-
   return (
     <div className='container'>
       <h1>Page 2</h1>
@@ -57,6 +45,7 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const previousUrlRef = useRef('');
+  const hasPushedRef = useRef(false); // Ref to track initial dataLayer push
 
   // Handle link clicks
   const handleLinkClick = (e) => {
@@ -66,16 +55,36 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Trigger screen_load event when the route changes, including Back/Forward navigation
-    pushToDataLayer('screen_load', previousUrlRef.current);
+    // Ensure dataLayer push only happens once on the first render
+    if (!hasPushedRef.current) {
+      pushToDataLayer('screen_load', previousUrlRef.current);
+      hasPushedRef.current = true; // Mark that we've pushed to dataLayer once
+    }
 
-    // Log both screen load and Back/Forward button actions
-    console.log('Navigated via Back/Forward button');
+    // Log navigation
+    console.log('Navigated via regular navigation');
     console.log('dataLayer:', window.dataLayer);
 
     // Update previous URL with the current one
     previousUrlRef.current = window.location.href;
   }, [location]);
+
+  // Detect back/forward button events using popstate
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // Detect back or forward button and push to dataLayer
+      pushToDataLayer('screen_load', previousUrlRef.current);
+      console.log('Navigated via Back/Forward button');
+    };
+
+    // Listen for the popstate event
+    window.addEventListener('popstate', handlePopState);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   return (
     <div className='container'>
